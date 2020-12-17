@@ -83,6 +83,7 @@ export class Dropdown extends Component {
         disabled: PropTypes.bool,
         appendTo: PropTypes.any,
         tabIndex: PropTypes.number,
+        zIndex: PropTypes.number,
         autoFocus: PropTypes.bool,
         filterInputAutoFocus: PropTypes.bool,
         resetFilterOnHide: PropTypes.bool,
@@ -502,7 +503,7 @@ export class Dropdown extends Component {
     }
 
     onOverlayEnter() {
-        this.panel.element.style.zIndex = String(DomHandler.generateZIndex());
+        this.panel.element.style.zIndex = String(this.props.zIndex || DomHandler.generateZIndex());
         this.alignPanel();
     }
 

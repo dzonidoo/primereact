@@ -24,6 +24,7 @@ interface DropdownProps {
     disabled?: boolean;
     appendTo?: any;
     tabIndex?: number;
+    zIndex?: number;
     autoFocus?: boolean;
     filterInputAutoFocus?: boolean;
     resetFilterOnHide?: boolean;
