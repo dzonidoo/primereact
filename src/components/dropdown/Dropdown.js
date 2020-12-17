@@ -50,6 +50,8 @@ export class Dropdown extends Component {
         tooltipOptions: null,
         ariaLabel: null,
         ariaLabelledBy: null,
+        onFilterInputChange: null,
+        loading: false,
         onChange: null,
         onFocus: null,
         onBlur: null,
@@ -95,6 +97,19 @@ export class Dropdown extends Component {
         tooltipOptions: PropTypes.object,
         ariaLabel: PropTypes.string,
         ariaLabelledBy: PropTypes.string,
+
+        /**
+         * Will be called when value in filtering input changes.
+         * It was added to enable autocomplete-like filtering where all options don't have to be downloaded
+         * via the network when component initializes.
+         * When this option is passed, local filtering will be skipped.
+         */
+        // 
+        onFilterInputChange: PropTypes.func,
+
+        // Will display a loading indicator in the filtering bar.
+        loading: PropTypes.bool,
+
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
         onBlur: PropTypes.func,
@@ -327,6 +342,12 @@ export class Dropdown extends Component {
     }
 
     filter(options) {
+        if (this.props.onFilterInputChange != null) {
+            // Disable local filtering when onFilterInputChange is defined.
+            // When it's defined, a parent component will pass items that are already filtered as `options`.
+            return options;
+        }
+        
         let filterValue = this.state.filter.trim().toLocaleLowerCase(this.props.filterLocale);
         let searchFields = this.props.filterBy ? this.props.filterBy.split(',') : [this.props.optionLabel || 'label'];
         let items = FilterUtils.filter(options, searchFields, filterValue, this.props.filterMatchMode, this.props.filterLocale);
@@ -405,6 +426,10 @@ export class Dropdown extends Component {
 
     onFilterInputChange(event) {
         this.setState({filter: event.target.value});
+        
+        if (this.props.onFilterInputChange != null) {
+            this.props.onFilterInputChange(event.target.value);
+        }
     }
 
     resetFilter() {
@@ -679,7 +704,16 @@ export class Dropdown extends Component {
                 this.renderTooltip();
         }
 
-        if (this.state.filter && (!this.props.options || this.props.options.length === 0)) {
+        if (
+            this.state.filter
+            && (!this.props.options || this.props.options.length === 0)
+
+            /**
+             * Do not reset the filter when options change.
+             * When onFilterInputChange is defined, changing options is the only way to filter items.
+             */
+            && this.props.onFilterInputChange == null
+        ) {
             this.setState({filter: ''});
         }
 
@@ -757,6 +791,10 @@ export class Dropdown extends Component {
     }
 
     renderItems(selectedOption) {
+        if (this.props.loading) {
+            return null;
+        }
+
         let visibleOptions = this.getVisibleOptions();
 
         if (visibleOptions && visibleOptions.length) {
@@ -789,7 +827,11 @@ export class Dropdown extends Component {
                     <div className="p-dropdown-filter-container">
                             <input ref={(el) => this.filterInput = el} type="text" autoComplete="off" className="p-dropdown-filter p-inputtext p-component" placeholder={this.props.filterPlaceholder}
                                 onKeyDown={this.onFilterInputKeyDown} onChange={this.onFilterInputChange} value={this.state.filter} />
-                            <span className="p-dropdown-filter-icon pi pi-search"></span>
+                            {
+                                this.props.loading
+                                    ? <i className="p-dropdown-loader-icon pi pi-spin pi-spinner" />
+                                    : null
+                            }
                     </div>
                 </div>
             );
@@ -806,7 +848,10 @@ export class Dropdown extends Component {
             'p-inputwrapper-filled': this.props.value,
             'p-inputwrapper-focus': this.state.focused
         });
-        let selectedOption = this.findOption(this.props.value);
+
+        // when value is not found in options(when async filtering is used) - use value from prop
+        // so selected value does not disappear when filtering.
+        let selectedOption = this.findOption(this.props.value) || this.props.value;
 
         let hiddenSelect = this.renderHiddenSelect(selectedOption);
         let keyboardHelper = this.renderKeyboardHelper();

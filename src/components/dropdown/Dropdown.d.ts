@@ -38,6 +38,8 @@ interface DropdownProps {
     tooltipOptions?: TooltipOptions;
     ariaLabel?: string,
     ariaLabelledBy?: string,
+    loading?: boolean;
+    onFilterInputChange?(value: string): void;
     valueTemplate?:((option: any, props: object) => any | any);
     itemTemplate?:((option: any) => any | any);
     onChange?(e: {originalEvent: Event, value: any, target: {name: string, id: string, value: any}}): void;

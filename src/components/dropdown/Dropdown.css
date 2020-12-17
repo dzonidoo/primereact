@@ -71,7 +71,10 @@ input.p-dropdown-label  {
     position: relative;
 }
 
-.p-dropdown-filter-icon {
+
+/* Replaced .p-dropdown-filter-icon with p-dropdown-loader-icon */
+
+.p-dropdown-loader-icon {
     position: absolute;
     top: 50%;
     margin-top: -.5rem;
