@@ -1,12 +1,15 @@
 {
   "name": "superdesk-primereact",
-  "version": "5.0.2",
+  "version": "5.0.2-2",
   "homepage": ".",
   "repository": {
     "type": "git",
     "url": "https://github.com/superdesk/primereact.git"
   },
   "license": "MIT",
+  "dependencies": {
+    "react-transition-group": "^4.4.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
     "@fullcalendar/core": "4.0.1",
@@ -36,7 +39,6 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "react-transition-group": "^4.4.1",
     "regenerator-runtime": "^0.13.5"
   },
   "peerDependencies": {
