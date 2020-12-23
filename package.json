@@ -1,10 +1,13 @@
 {
-  "name": "superdesk-primereact",
+  "name": "@superdesk/primereact",
   "version": "5.0.2-2",
   "homepage": ".",
   "repository": {
     "type": "git",
     "url": "https://github.com/superdesk/primereact.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT",
   "dependencies": {
