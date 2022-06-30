@@ -30,7 +30,7 @@ export class Dialog extends Component {
         maskClassName: null,
         showHeader: true,
         appendTo: null,
-        baseZIndex: 0,
+        zIndex: 0,
         maximizable: false,
         blockScroll: false,
         icons: null,
@@ -60,7 +60,7 @@ export class Dialog extends Component {
         maskClassName: PropTypes.string,
         showHeader: PropTypes.bool,
         appendTo: PropTypes.object,
-        baseZIndex: PropTypes.number,
+        zIndex: PropTypes.number,
         maximizable: PropTypes.bool,
         blockScroll: PropTypes.bool,
         icons: PropTypes.any,
@@ -134,7 +134,7 @@ export class Dialog extends Component {
     }
 
     get zIndex() {
-        return this.props.baseZIndex + DomHandler.generateZIndex();
+        return this.props.zIndex;
     }
 
     get maximized() {
