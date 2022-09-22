@@ -33,7 +33,8 @@ export class TieredMenu extends Component {
         baseZIndex: PropTypes.number,
         appendTo: PropTypes.any,
         onShow: PropTypes.func,
-        onHide: PropTypes.func
+        onHide: PropTypes.func,
+        'data-test-id': PropTypes.string,
     };
 
     constructor(props) {
@@ -177,7 +178,7 @@ export class TieredMenu extends Component {
         return (
             <CSSTransition classNames="p-connected-overlay" in={this.state.visible} timeout={{ enter: 120, exit: 100 }}
                 unmountOnExit onEnter={this.onEnter} onEntered={this.onEntered} onExit={this.onExit}>
-                <div ref={el => this.container = el} id={this.id} className={className} style={this.props.style}>
+                <div ref={el => this.container = el} id={this.id} className={className} style={this.props.style} data-test-id={this.props['data-test-id']}>
                     <TieredMenuSub model={this.props.model} root popup={this.props.popup} />
                 </div>
             </CSSTransition>

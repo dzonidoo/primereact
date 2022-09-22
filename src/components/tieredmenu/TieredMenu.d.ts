@@ -13,6 +13,7 @@ interface TieredMenuProps {
     appendTo?: any;
     onShow?(e: Event): void;
     onHide?(e: Event): void;
+    'data-test-id'?: string;
 }
 
 export class TieredMenu extends React.Component<TieredMenuProps, any> {
