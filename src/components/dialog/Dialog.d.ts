@@ -18,7 +18,7 @@ interface DialogProps {
     maskClassName?: string;
     showHeader?: boolean;
     appendTo?: HTMLElement;
-    baseZIndex?: number;
+    zIndex?: number;
     maximizable?: boolean;
     blockScroll?: boolean;
     ariaCloseIconLabel?: string;
