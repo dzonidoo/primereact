@@ -23,7 +23,8 @@ export class TieredMenuSub extends Component {
         popup: PropTypes.bool,
         onLeafClick: PropTypes.func,
         onKeyDown: PropTypes.func,
-        parentActive: PropTypes.bool
+        parentActive: PropTypes.bool,
+        direction: PropTypes.string,
     };
 
     constructor(props) {
@@ -100,22 +101,29 @@ export class TieredMenuSub extends Component {
             });
         }
 
-        if (this.props.root) {
-            if (item.items) {
-                if (this.state.activeItem && item === this.state.activeItem) {
-                    this.setState({
-                        activeItem: null
-                    });
-                }
-                else {
-                    this.setState({
-                        activeItem: item
-                    });
-                }
+        if ((item.items?.length ?? 0) > 0) {
+            if (this.state.activeItem && item === this.state.activeItem) {
+                this.setState({
+                    activeItem: null
+                });
+            }
+            else {
+                this.setState({
+                    activeItem: item
+                });
             }
         }
 
-        if (!item.items) {
+        var target = event.target;
+        var isKeyboardEvent = event.clientX === 0 && event.clientY === 0;
+
+        if (isKeyboardEvent) {
+            setTimeout(() => {
+                var el = target.parentElement.querySelectorAll('.p-submenu-list > .p-menuitem')[0].querySelector('button');
+
+                el.focus();
+            }, 0)
+        } else if (!item.items) {
             this.onLeafClick();
         }
     }
@@ -169,8 +177,10 @@ export class TieredMenuSub extends Component {
     }
 
     onChildItemKeyDown(event, childListItem) {
-        //left
-        if (event.which === 37) {
+        var leftArrow = event.which === 37;
+        var escape = event.which === 27;
+
+        if (leftArrow || escape) {
             this.setState({activeItem: null});
             childListItem.parentElement.previousElementSibling.focus();
         }
@@ -235,7 +245,14 @@ export class TieredMenuSub extends Component {
     renderSubmenu(item) {
         if(item.items) {
             return (
-                <TieredMenuSub model={item.items} onLeafClick={this.onLeafClick} popup={this.props.popup} onKeyDown={this.onChildItemKeyDown} parentActive={item === this.state.activeItem} />
+                <TieredMenuSub
+                    model={item.items}
+                    onLeafClick={this.onLeafClick}
+                    popup={this.props.popup}
+                    onKeyDown={this.onChildItemKeyDown}
+                    parentActive={item === this.state.activeItem}
+                    direction={this.props.direction}
+                />
             );
         }
 
@@ -251,13 +268,13 @@ export class TieredMenuSub extends Component {
 
         return (
             <li key={item.label + '_' + index} className={className} style={item.style} onMouseEnter={(event) => this.onItemMouseEnter(event, item)} role="none">
-                <a href={item.url || '#'} className={linkClassName} target={item.target} role="menuitem" aria-haspopup={item.items != null}
+                <button className={linkClassName} role="menuitem" aria-haspopup={item.items != null}
                     onClick={(event) => this.onItemClick(event, item)} onKeyDown={(event) => this.onItemKeyDown(event, item)}>
                     {icon}
                     <span className="p-menuitem-text">{item.label}</span>
                     {submenuIcon}
                     <Ripple />
-                </a>
+                </button>
                 {submenu}
             </li>
         );
@@ -287,7 +304,15 @@ export class TieredMenuSub extends Component {
         const submenu = this.renderMenu();
 
         return (
-            <ul ref={el => this.element = el} className={className} role={this.props.root ? 'menubar' : 'menu'} aria-orientation="horizontal">
+            <ul
+                ref={el => this.element = el}
+                className={className}
+                role={this.props.root ? 'menubar' : 'menu'}
+                aria-orientation="horizontal"
+                style={{
+                    left: this.props.direction === 'left' ? '-100%' : '100%',
+                }}
+            >
                 {submenu}
             </ul>
         );

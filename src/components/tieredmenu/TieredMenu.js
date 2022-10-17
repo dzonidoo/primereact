@@ -8,6 +8,60 @@ import { CSSTransition } from 'react-transition-group';
 import UniqueComponentId from '../utils/UniqueComponentId';
 import ConnectedOverlayScrollHandler from '../utils/ConnectedOverlayScrollHandler';
 
+// interface IProps {
+//     children(args: {direction: 'left' | 'right'}): JSX.Element;
+// }
+
+// interface IState {
+//     direction: 'left' | 'right' | null;
+// }
+
+/**
+ * Checks whether there is more space on the left or right,
+ * in order to choose which direction submenus open to.
+ */
+export class LocationRetrieved extends React.PureComponent { // <IProps, IState>
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            direction: null,
+        };
+
+        this.recompute = this.recompute.bind(this);
+    }
+
+    recompute(callback) { // public, used in TieredMenu#show
+        this.setState({
+            direction: null,
+        });
+        setTimeout(callback, 0);
+    }
+
+    render() {
+        if (this.state.direction == null) {
+            return (
+                <span
+                    ref={(el) => {
+                        if (el != null) {
+                            const rect = el.getBoundingClientRect();
+                            const left = rect.left;
+                            const availableSpaceH = document.body.offsetWidth;
+                            const direction = left < availableSpaceH / 2 ? 'right' : 'left';
+
+                            this.setState({direction});
+                        }
+                    }}
+                />
+            );
+        } else {
+            return this.props.children({
+                direction: this.state.direction,
+            });
+        }
+    }
+}
+
 export class TieredMenu extends Component {
 
     static defaultProps = {
@@ -64,10 +118,12 @@ export class TieredMenu extends Component {
         this.target = event.currentTarget;
         let currentEvent = event;
 
-        this.setState({ visible: true }, () => {
-            if (this.props.onShow) {
-                this.props.onShow(currentEvent);
-            }
+        this.locator.recompute(() => {
+            this.setState({ visible: true }, () => {
+                if (this.props.onShow) {
+                    this.props.onShow(currentEvent);
+                }
+            });
         });
     }
 
@@ -172,25 +228,37 @@ export class TieredMenu extends Component {
         }
     }
 
-    renderElement() {
+    renderElement(direction) {
         const className = classNames('p-tieredmenu p-component', {'p-tieredmenu-overlay': this.props.popup}, this.props.className);
 
         return (
             <CSSTransition classNames="p-connected-overlay" in={this.state.visible} timeout={{ enter: 120, exit: 100 }}
                 unmountOnExit onEnter={this.onEnter} onEntered={this.onEntered} onExit={this.onExit}>
                 <div ref={el => this.container = el} id={this.id} className={className} style={this.props.style} data-test-id={this.props['data-test-id']}>
-                    <TieredMenuSub model={this.props.model} root popup={this.props.popup} />
+                    <TieredMenuSub model={this.props.model} root popup={this.props.popup} direction={direction} />
                 </div>
             </CSSTransition>
         );
     }
 
     render() {
-        const element = this.renderElement();
+        return (
+            <LocationRetrieved
+                ref={(instance) => {
+                    if (instance != null) {
+                        this.locator = instance;
+                    }
+                }}
+            >
+                {({direction}) => {
+                    const element = this.renderElement(direction);
 
-        if (this.props.appendTo)
-            return ReactDOM.createPortal(element, this.props.appendTo);
-        else
-            return element;
+                    if (this.props.appendTo)
+                        return ReactDOM.createPortal(element, this.props.appendTo);
+                    else
+                        return element;
+                }}
+            </LocationRetrieved>
+        );
     }
 }
