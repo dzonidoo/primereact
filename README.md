@@ -16,6 +16,9 @@ Original version is used with a patch version after the dash e.g. 5.0.2-2
 * Added zIndex prop
 * Added ability to retrieve/filter items asynchronously
 
+### MultiSelect
+* Added zIndex prop
+
 ### Dialog
 * Replaced `baseZIndex` with `zIndex`. The former was adding `1000` to specified base index which interferes with base superdesk styles that generally use lower z-indexes. `zIndex` makes it possible to pass a pre-determined value that is not changed.
 
