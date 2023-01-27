@@ -52,7 +52,8 @@ export class MultiSelect extends Component {
         selectedItemTemplate: null,
         onChange: null,
         onFocus: null,
-        onBlur: null
+        onBlur: null,
+        zIndex: null,
     };
 
     static propTypes = {
@@ -93,7 +94,8 @@ export class MultiSelect extends Component {
         selectedItemTemplate: PropTypes.any,
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
-        onBlur: PropTypes.func
+        onBlur: PropTypes.func,
+        zIndex: PropTypes.number,
     };
 
     constructor(props) {
@@ -288,7 +290,7 @@ export class MultiSelect extends Component {
     }
 
     onOverlayEnter() {
-        this.panel.element.style.zIndex = String(DomHandler.generateZIndex());
+        this.panel.element.style.zIndex = this.props.zIndex ? this.props.zIndex : String(DomHandler.generateZIndex());
         this.alignPanel();
     }
 

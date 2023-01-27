@@ -35,6 +35,7 @@ interface MultiSelectProps {
     ariaLabelledBy?: string;
     maxSelectedLabels?: number;
     selectedItemsLabel?: string;
+    zIndex?: number;
     itemTemplate?(item: any): JSX.Element | undefined;
     selectedItemTemplate?(value: any): JSX.Element | undefined;
     onChange?(e: {originalEvent: Event, value: any, target: {name: string, id: string, value: any}}): void;
