@@ -61,8 +61,8 @@ export class MultiSelect extends Component {
         name: PropTypes.string,
         value: PropTypes.any,
         options: PropTypes.array,
-        optionLabel: PropTypes.string,
-        optionValue: PropTypes.string,
+        optionLabel: PropTypes.func,
+        optionValue: PropTypes.func,
         display: PropTypes.string,
         style: PropTypes.object,
         className: PropTypes.string,
@@ -498,17 +498,21 @@ export class MultiSelect extends Component {
     filterOptions(options) {
         if (options) {
             let filterValue = this.state.filter.trim().toLocaleLowerCase(this.props.filterLocale);
-            let searchFields = this.props.filterBy ? this.props.filterBy.split(',') : [this.props.optionLabel || 'label'];
-            return FilterUtils.filter(options, searchFields, filterValue, this.props.filterMatchMode, this.props.filterLocale);
+
+            let filterOptions = options.filter(
+                (option) => this.props.optionLabel(option).trim().toLowerCase().includes(filterValue),
+            );
+
+            return filterOptions;
         }
     }
 
     getOptionLabel(option) {
-        return this.props.optionLabel ? ObjectUtils.resolveFieldData(option, this.props.optionLabel) : (option && option['label'] !== undefined ? option['label'] : option);
+        return this.props.optionLabel != null ? this.props.optionLabel(option) : (option && option['label'] !== undefined ? option['label'] : option);
     }
 
     getOptionValue(option) {
-        return this.props.optionValue ? ObjectUtils.resolveFieldData(option, this.props.optionValue) : (option && option['value'] !== undefined ? option['value'] : option);
+        return this.props.optionValue != null ? this.props.optionValue(option) : (option && option['value'] !== undefined ? option['value'] : option);
     }
 
     isEmpty() {
