@@ -497,22 +497,20 @@ export class MultiSelect extends Component {
         if (options) {
             let filterValue = this.state.filter.trim().toLocaleLowerCase(this.props.filterLocale);
 
-            let filterLabel = options.filter((option) => {
-                const thisValue = this.props.optionLabel(option).trim().toLowerCase();
+            let filterOptions = options.filter(
+                (option) => this.props.optionLabel(option).trim().toLowerCase().includes(filterValue),
+            );
 
-                return thisValue.includes(filterValue);
-            });
-
-            return filterLabel;
+            return filterOptions;
         }
     }
 
     getOptionLabel(option) {
-        return this.props.optionLabel ? this.props.optionLabel(option) : (option && option['label'] !== undefined ? option['label'] : option);
+        return this.props.optionLabel != null ? this.props.optionLabel(option) : (option && option['label'] !== undefined ? option['label'] : option);
     }
 
     getOptionValue(option) {
-        return this.props.optionValue ? this.props.optionValue(option) : (option && option['value'] !== undefined ? option['value'] : option);
+        return this.props.optionValue != null ? this.props.optionValue(option) : (option && option['value'] !== undefined ? option['value'] : option);
     }
 
     isEmpty() {
