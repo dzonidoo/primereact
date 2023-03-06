@@ -370,9 +370,7 @@ selectedItemTemplate(option) {
 </CodeHighlight>
 
             <h5>Filtering</h5>
-            <p>Options can be filtered using an input field in the overlay by enabling the <i>filter</i> property. By default filtering is done against
-                label of the items and <i>filterBy</i> property is available to choose one or more properties of the options. In addition <i>filterMatchMode</i> can be utilized
-                to define the filtering algorithm, valid options are "contains" (default), "startsWith", "endsWith", "equals" and "notEquals".</p>
+            <p>Options can be filtered using an input field in the overlay by enabling the <i>filter</i> property.</p>
 
 <CodeHighlight>
 {`
@@ -529,10 +527,10 @@ selectedItemTemplate(option) {
                             <td>When specified, displays an input field to filter the items on keyup.</td>
                         </tr>
                         <tr>
-                            <td>filterBy</td>
-                            <td>string</td>
-                            <td>label</td>
-                            <td>When filtering is enabled, filterBy decides which field or fields (comma separated) to search against.</td>
+                            <td />
+                            <td />
+                            <td />
+                            <td />
                         </tr>
                         <tr>
                             <td>filterMatchMode</td>
