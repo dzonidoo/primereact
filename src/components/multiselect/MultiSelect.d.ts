@@ -6,8 +6,8 @@ interface MultiSelectProps {
     name?: string;
     value?: any;
     options?: any[];
-    optionLabel?: string;
-    optionValue?: string;
+    optionLabel?: (option: any) => string;
+    optionValue?: (option: any) => string;
     display?: string;
     style?: object;
     className?: string;
