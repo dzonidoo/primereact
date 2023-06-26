@@ -9,7 +9,7 @@ interface TieredMenuProps {
     style?: object;
     className?: string;
     autoZIndex?: boolean;
-    baseZIndex?: number;
+    zIndex?: number;
     appendTo?: any;
     onShow?(e: Event): void;
     onHide?(e: Event): void;

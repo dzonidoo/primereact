@@ -71,7 +71,7 @@ export class TieredMenu extends Component {
         style: null,
         className: null,
         autoZIndex: true,
-        baseZIndex: 0,
+        zIndex: 0,
         appendTo: null,
         onShow: null,
         onHide: null
@@ -84,7 +84,7 @@ export class TieredMenu extends Component {
         style: PropTypes.object,
         className: PropTypes.string,
         autoZIndex: PropTypes.bool,
-        baseZIndex: PropTypes.number,
+        zIndex: PropTypes.number,
         appendTo: PropTypes.any,
         onShow: PropTypes.func,
         onHide: PropTypes.func,
@@ -138,7 +138,7 @@ export class TieredMenu extends Component {
 
     onEnter() {
         if (this.props.autoZIndex) {
-            this.container.style.zIndex = String(this.props.baseZIndex + DomHandler.generateZIndex());
+            this.container.style.zIndex = this.props.zIndex;
         }
         DomHandler.absolutePosition(this.container,  this.target);
     }
