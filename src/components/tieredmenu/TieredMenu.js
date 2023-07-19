@@ -138,7 +138,7 @@ export class TieredMenu extends Component {
 
     onEnter() {
         if (this.props.autoZIndex) {
-            this.container.style.zIndex = this.props.zIndex;
+            this.container.style.zIndex = this.props.zIndex ?? 1000;
         }
         DomHandler.absolutePosition(this.container,  this.target);
     }
